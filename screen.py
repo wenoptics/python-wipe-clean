@@ -2,8 +2,8 @@ from typing import NamedTuple
 
 
 class ScreenPoint(NamedTuple):
-    x: int
-    y: int
+    x: float
+    y: float
 
 
 class ScreenPointDrawing(NamedTuple):
