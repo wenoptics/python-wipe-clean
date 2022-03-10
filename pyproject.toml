@@ -1,8 +1,15 @@
 [tool.poetry]
 name = "wipe-clean"
 version = "0.1.0"
-description = "Wipe clean your console."
-authors = ["wenop <wenoptics@gmail.com>"]
+description = "Wipe clean your terminal"
+authors = ["wenoptk <wenoptics@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/wenoptics/python-wipe-clean"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
@@ -16,3 +23,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 wipe-clean = "wipe_clean.main:main"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/wenoptics/python-wipe-clean/issues"
