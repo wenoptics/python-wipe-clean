@@ -17,6 +17,12 @@ class Render:
     def screen_size(self):
         return self.console.size
 
+    def move_cursor_home(self):
+        self.console.control(Control.home())
+
+    def clear(self):
+        self.console.control(Control.clear())
+
     def draw_string_at(self, p: ScreenPoint, s: str):
         def clamp(minimum, v, maximum):
             return max(minimum, min(v, maximum))

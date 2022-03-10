@@ -106,14 +106,14 @@ class PathZigZag(Path):
     def get_points(self) -> Iterable[PathPoint]:
         # Get half circle path
         circle_points_left = PathCircle(
-            self.size,
+            self.size // 2,
             math.pi / 2,
             (math.pi * 3) / 2,
         ).get_points_list()
         circle_points_left.reverse()
 
         circle_points_right = PathCircle(
-            self.size,
+            self.size // 2,
             (math.pi * 3) / 2,
             (math.pi * 5) / 2,
         ).get_points_list()
@@ -129,10 +129,85 @@ class PathZigZag(Path):
             turn = circle_points_right if step % 2 == 0 else circle_points_left
             turn = [PathPoint(ScreenPoint(
                 p.coord.x + p1.x,
-                p.coord.y + p1.y + self.size,
+                p.coord.y + p1.y + self.size / 2,
             ), p.angle) for p in turn]
 
             points.extend(line)
             points.extend(turn)
+
+        return points
+
+
+class PathRectEdge(Path):
+    def __init__(self, start: PathPoint, size, brush_deformation_factor, max_x, max_y):
+        self.start = start
+        self.size = size
+        self.brush_deformation_factor = brush_deformation_factor
+        self.max_x = max_x
+        self.max_y = max_y
+
+    def get_points(self) -> Iterable[PathPoint]:
+        margin_v = self.size / 2
+        margin_h = self.size * self.brush_deformation_factor / 2
+        start = ScreenPoint(self.start.coord.x, self.max_y - margin_v)
+
+        points = []
+        for x in range(int(start.x), -2, -1):
+            points.append(PathPoint(ScreenPoint(
+                x,
+                self.max_y - margin_v + 1
+            ), math.pi / 2))
+
+        angle_points = PathCircle(self.size / 2, 0, math.pi / 2).get_points_list()
+        angle_points = [PathPoint(ScreenPoint(
+            p.coord.x,
+            p.coord.y + self.max_y - margin_v * 2
+        ), p.angle) for p in angle_points]
+        points.extend(angle_points[::-1])
+
+        for y in range(int(self.max_y - margin_v - 3), -1, -1):
+            points.append(PathPoint(ScreenPoint(
+                margin_h - 1,
+                y
+            ), math.pi))
+
+        angle_points = PathCircle(self.size / 2, math.pi, math.pi * 3 / 2).get_points_list()
+        angle_points = [PathPoint(ScreenPoint(
+            p.coord.x + margin_h * 2,
+            p.coord.y
+        ), p.angle) for p in angle_points]
+        points.extend(angle_points[::-1])
+
+        for x in range(int(margin_h + 3), self.max_x, 1):
+            points.append(PathPoint(ScreenPoint(
+                x,
+                margin_v - 1
+            ), math.pi / 2))
+
+        angle_points = PathCircle(self.size / 2, math.pi, math.pi * 3 / 2).get_points_list()
+        angle_points = [PathPoint(ScreenPoint(
+            p.coord.x + self.max_x,
+            p.coord.y + margin_v * 2
+        ), p.angle) for p in angle_points]
+        points.extend(angle_points[::-1])
+
+        for y in range(int(margin_v + 3), self.max_y, 1):
+            points.append(PathPoint(ScreenPoint(
+                self.max_x - margin_h,
+                y
+            ), math.pi))
+
+        angle_points = PathCircle(self.size / 2, math.pi * 3 / 2, math.pi * 4 / 2).get_points_list()
+        angle_points = [PathPoint(ScreenPoint(
+            p.coord.x + self.max_x - margin_h * 2,
+            p.coord.y + self.max_y
+        ), p.angle) for p in angle_points]
+        points.extend(angle_points[::-1])
+
+        for x in range(int(self.max_x - margin_h - 3), self.max_x, -1):
+            points.append(PathPoint(ScreenPoint(
+                x,
+                self.max_y - margin_v
+            ), math.pi / 2))
 
         return points

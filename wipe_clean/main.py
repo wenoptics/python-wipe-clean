@@ -2,7 +2,7 @@ import asyncio
 import math
 
 from .brush import BrushWipe
-from .path import PathZigZag
+from .path import PathZigZag, PathRectEdge
 from .renderer import AnimationRender
 
 
@@ -12,13 +12,16 @@ def main():
     # You might customize the wipe brush
     bw = BrushWipe()
 
-    # You might create your own wipe path
-    path_points = PathZigZag(
-        size=math.floor(bw.width / 2),
+    common_brush_cfg = dict(
+        size=bw.width,
         brush_deformation_factor=bw.deformation_factor,
         max_x=r.screen_size.width,
         max_y=r.screen_size.height,
-    ).get_points_list()
+    )
+
+    # You might create your own wipe path
+    path_points = PathZigZag(**common_brush_cfg).get_points_list()
+    path_points += PathRectEdge(path_points[-1], **common_brush_cfg).get_points_list()
 
     frame_rate = 0.006
     for idx, pp in enumerate(path_points):
@@ -31,6 +34,8 @@ def main():
             )
 
     asyncio.run(r.render_frames())
+    r.move_cursor_home()
+    r.clear()
 
 
 if __name__ == '__main__':
