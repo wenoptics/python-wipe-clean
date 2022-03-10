@@ -1,4 +1,6 @@
+import asyncio
 import math
+from typing import Optional
 
 from rich.console import Console
 from rich.control import Control
@@ -29,17 +31,49 @@ class Render:
         # if p.y < 0:
         #     return
 
-        x = int(clamp(0, p.x, self.screen_size.width - 2))
+        x = int(clamp(0, p.x, self.screen_size.width - 1))
         y = int(clamp(0, p.y, self.screen_size.height - 2))
 
         self.console.control(Control.move_to(x, y))
-        # self.console.print(s)
-        self.console.out(s)
+        self.console.out(s, end='')
+
+
+class AnimationRender(Render):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._tasks = asyncio.Queue(500)
+
+    async def _draw_with_delay(self, timeout: float, p: ScreenPoint, s: str):
+        await asyncio.sleep(timeout)
+        self.draw_string_at(p, s)
+
+    async def schedule_draw(
+            self,
+            timeout: float, p: ScreenPoint, s: str,
+            clean_after: Optional[float] = None
+    ):
+        await self._tasks.put(
+            asyncio.create_task(self._draw_with_delay(timeout, p, s))
+        )
+
+        if clean_after is not None:
+            await self.schedule_draw(timeout + clean_after, p, ' ', None)
+
+    async def gather(self):
+        while True:
+            coros = [
+                self._tasks.get() for _ in range(self._tasks.qsize())
+            ]
+            if len(coros) == 0:
+                await asyncio.sleep(0.1)
+            else:
+                await asyncio.gather(*coros)
 
 
 if __name__ == '__main__':
 
-    r = Render()
+    r = AnimationRender()
     bw = BrushWipe()
 
     path_points = PathZigZag(
@@ -49,12 +83,24 @@ if __name__ == '__main__':
         max_y=r.screen_size.height,
     ).get_points_list()
 
-    for pp in path_points:
-        r.draw_string_at(pp.coord, '#')
+    frame_rate = 0.006
+
+
+    async def schedule():
+        for idx, pp in enumerate(path_points):
+            for bwp in bw.get_points(*pp.coord, pp.angle):
+                await r.schedule_draw(idx * frame_rate, bwp.coord, '#', clean_after=0.1)
+
+    async def run():
+        await asyncio.gather(
+            schedule(),
+            r.gather(),
+        )
+
+    asyncio.run(run())
 
     #
     # p_list = bw.get_points(10, 5, math.radians(90))
     #
     # for _p in p_list:
     #     r.draw_string_at(_p.coord, _p.char)
-
