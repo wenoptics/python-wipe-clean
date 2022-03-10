@@ -1,5 +1,4 @@
 import asyncio
-import math
 
 from .brush import BrushWipe
 from .path import PathZigZag, PathRectEdge
