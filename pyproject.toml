@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "wipe-clean"
-version = "0.1.1"
-description = "Wipe clean your terminal"
+version = "0.1.2"
+description = "Clean your terminal in a ritual way"
 authors = ["wenoptk <wenoptics@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/wenoptics/python-wipe-clean"
@@ -12,7 +12,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.6.2"
 rich = "^11.2.0"
 
 [tool.poetry.dev-dependencies]
@@ -22,7 +22,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-wipe-clean = "wipe_clean.main:main"
+wipe-clean = "wipe_clean.main:cli"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/wenoptics/python-wipe-clean/issues"
