@@ -1,6 +1,8 @@
 import asyncio
+import heapq
 import math
-from typing import Optional
+import time
+from typing import Optional, NamedTuple, List
 
 from rich.console import Console
 from rich.control import Control
@@ -40,35 +42,38 @@ class Render:
 
 class AnimationRender(Render):
 
+    class TimedDrawStruct(NamedTuple):
+        time_s: float
+        point: ScreenPoint
+        char: str
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._tasks = asyncio.Queue(500)
+        # This will be maintained sorted (priority queue)
+        self._scheduled: List[AnimationRender.TimedDrawStruct] = []
+        self._evt_stop = asyncio.Event()
 
-    async def _draw_with_delay(self, timeout: float, p: ScreenPoint, s: str):
-        await asyncio.sleep(timeout)
-        self.draw_string_at(p, s)
-
-    async def schedule_draw(
+    def schedule_draw(
             self,
             timeout: float, p: ScreenPoint, s: str,
             clean_after: Optional[float] = None
     ):
-        await self._tasks.put(
-            asyncio.create_task(self._draw_with_delay(timeout, p, s))
-        )
+        heapq.heappush(self._scheduled, AnimationRender.TimedDrawStruct(timeout, p, s))
 
         if clean_after is not None:
-            await self.schedule_draw(timeout + clean_after, p, ' ', None)
+            self.schedule_draw(timeout + clean_after, p, ' ', None)
 
-    async def gather(self):
-        while True:
-            coros = [
-                self._tasks.get() for _ in range(self._tasks.qsize())
-            ]
-            if len(coros) == 0:
-                await asyncio.sleep(0.1)
+    async def render_frames(self):
+        _start_time = time.monotonic()
+
+        while self._scheduled:
+            st = heapq.heappop(self._scheduled)
+            remaining_s = st.time_s - (time.monotonic() - _start_time)
+
+            if remaining_s > 0:
+                await asyncio.sleep(remaining_s)
             else:
-                await asyncio.gather(*coros)
+                self.draw_string_at(st.point, st.char)
 
 
 if __name__ == '__main__':
@@ -85,19 +90,11 @@ if __name__ == '__main__':
 
     frame_rate = 0.006
 
+    for idx, pp in enumerate(path_points):
+        for bwp in bw.get_points(*pp.coord, pp.angle):
+            r.schedule_draw(idx * frame_rate, bwp.coord, '#', clean_after=0.03)
 
-    async def schedule():
-        for idx, pp in enumerate(path_points):
-            for bwp in bw.get_points(*pp.coord, pp.angle):
-                await r.schedule_draw(idx * frame_rate, bwp.coord, '#', clean_after=0.1)
-
-    async def run():
-        await asyncio.gather(
-            schedule(),
-            r.gather(),
-        )
-
-    asyncio.run(run())
+    asyncio.run(r.render_frames())
 
     #
     # p_list = bw.get_points(10, 5, math.radians(90))
