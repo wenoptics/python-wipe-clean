@@ -21,19 +21,19 @@ class Render:
         def clamp(minimum, v, maximum):
             return max(minimum, min(v, maximum))
 
-        if p.x > self.screen_size.width - 1:
-            return
-        if p.y > self.screen_size.height - 2:
-            return
-        if p.x < 0:
-            return
-        if p.y < 0:
-            return
+        # if p.x > self.screen_size.width - 1:
+        #     return
+        # if p.y > self.screen_size.height - 2:
+        #     return
+        # if p.x < 0:
+        #     return
+        # if p.y < 0:
+        #     return
+        # x = int(p.x)
+        # y = int(p.y)
 
-        # x = int(clamp(0, p.x, self.screen_size.width - 1))
-        # y = int(clamp(0, p.y, self.screen_size.height - 2))
-        x = int(p.x)
-        y = int(p.y)
+        x = int(clamp(0, p.x, self.screen_size.width - 1))
+        y = int(clamp(0, p.y, self.screen_size.height - 2))
 
         self.console.control(Control.move_to(x, y))
         self.console.out(s, end='')
