@@ -2,7 +2,7 @@ import math
 from abc import ABC, abstractmethod
 from typing import NamedTuple, Iterable, List, Tuple
 
-from screen import ScreenPoint
+from .screen import ScreenPoint
 
 
 class PathPoint(NamedTuple):

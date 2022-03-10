@@ -2,7 +2,7 @@ import math
 from abc import ABC, abstractmethod
 from typing import List
 
-from screen import ScreenPoint, ScreenPointDrawing
+from .screen import ScreenPoint, ScreenPointDrawing
 
 
 class Brush(ABC):

@@ -1,15 +1,12 @@
 import asyncio
 import heapq
-import math
 import time
-from typing import Optional, NamedTuple, List
+from typing import NamedTuple, List, Optional
 
 from rich.console import Console
 from rich.control import Control
 
-from brush import BrushWipe
-from path import PathZigZag
-from screen import ScreenPoint
+from .screen import ScreenPoint
 
 
 class Render:
@@ -24,17 +21,19 @@ class Render:
         def clamp(minimum, v, maximum):
             return max(minimum, min(v, maximum))
 
-        # if p.x > self.screen_size.width - 1:
-        #     return
-        # if p.y > self.screen_size.height - 1:
-        #     return
-        # if p.x < 0:
-        #     return
-        # if p.y < 0:
-        #     return
+        if p.x > self.screen_size.width - 1:
+            return
+        if p.y > self.screen_size.height - 2:
+            return
+        if p.x < 0:
+            return
+        if p.y < 0:
+            return
 
-        x = int(clamp(0, p.x, self.screen_size.width - 1))
-        y = int(clamp(0, p.y, self.screen_size.height - 2))
+        # x = int(clamp(0, p.x, self.screen_size.width - 1))
+        # y = int(clamp(0, p.y, self.screen_size.height - 2))
+        x = int(p.x)
+        y = int(p.y)
 
         self.console.control(Control.move_to(x, y))
         self.console.out(s, end='')
@@ -74,30 +73,3 @@ class AnimationRender(Render):
                 await asyncio.sleep(remaining_s)
             else:
                 self.draw_string_at(st.point, st.char)
-
-
-if __name__ == '__main__':
-
-    r = AnimationRender()
-    bw = BrushWipe()
-
-    path_points = PathZigZag(
-        size=math.floor(bw.width / 2),
-        brush_deformation_factor=bw.deformation_factor,
-        max_x=r.screen_size.width,
-        max_y=r.screen_size.height,
-    ).get_points_list()
-
-    frame_rate = 0.006
-
-    for idx, pp in enumerate(path_points):
-        for bwp in bw.get_points(*pp.coord, pp.angle):
-            r.schedule_draw(idx * frame_rate, bwp.coord, '#', clean_after=0.03)
-
-    asyncio.run(r.render_frames())
-
-    #
-    # p_list = bw.get_points(10, 5, math.radians(90))
-    #
-    # for _p in p_list:
-    #     r.draw_string_at(_p.coord, _p.char)
