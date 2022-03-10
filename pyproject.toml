@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wipe-clean"
-version = "0.1.2"
+version = "0.1.3"
 description = "Clean your terminal in a ritual way"
 authors = ["wenoptk <wenoptics@gmail.com>"]
 readme = "README.md"

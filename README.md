@@ -6,7 +6,7 @@
 
 Clean your terminal in a ritual way. Works on Windows, Linux and macOS.
 
-![demo](./doc/terminal.gif)
+![demo](https://github.com/wenoptics/python-wipe-clean/blob/master/doc/terminal.gif?raw=true)
 
 
 ```bash
