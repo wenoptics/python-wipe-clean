@@ -1,4 +1,5 @@
 import asyncio
+import platform
 import sys
 
 from .brush import BrushWipe
@@ -9,7 +10,7 @@ from .renderer import AnimationRender
 def main(
         frame_interval_s=0.005,
         clean_after=None,
-        min_frame_delay=0.005
+        min_frame_delay=0
 ):
     if clean_after is None:
         clean_after = 0.05
@@ -104,13 +105,29 @@ def cli(*args):
     wipe-clean - Clean your terminal in a ritual way
     """
 
+    # Windows timer precision is bad on Python
+    if platform.system() == 'Windows':
+        default = {
+            'f': 0.005,
+            'c': 0.005,
+            'm': 0.005
+        }
+    else:
+        default = {
+            'f': 0.002,
+            'c': 0.002,
+            'm': 0
+        }
+
     parser = argparse.ArgumentParser(description=art_ascii + text, formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-f', '--frame-interval', type=float, default=0.005, help='Frame interval (in second)')
-    parser.add_argument('-c', '--clean-after', type=float, default=0.005, help='Clean drawn delay (in second)')
-    parser.add_argument('-m', '--min-frame-delay', type=float, default=0.005,
-                        help='Minimum frame delay (in second). A delay will only be will be'
-                             ' scheduled when frame interval is larger than this value.'
-                             ' This may help solve the inaccurate sleep on Windows.')
+    parser.add_argument('-f', '--frame-interval', default=default['f'],
+                        type=float, help='Frame interval (in second)')
+    parser.add_argument('-c', '--clean-after', default=default['c'],
+                        type=float, help='Clean drawn delay (in second)')
+    parser.add_argument('-m', '--min-frame-delay', default=default['m'],
+                        type=float, help='Minimum frame delay (in second). A delay will only be will be'
+                                         ' scheduled when frame interval is larger than this value.'
+                                         ' This may help solve the inaccurate sleep on Windows.')
 
     parsed_args = parser.parse_args(args)
     main(
