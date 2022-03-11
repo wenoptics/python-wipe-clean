@@ -1,13 +1,10 @@
+<div align="center">
+
 # Wipe Clean
 
-
-<div align="center">
 <a href="https://pypi.org/project/wipe-clean/">
   <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="200" height="200">
 </a>
-</div>
-
-<div align="center">
 
 ![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)
