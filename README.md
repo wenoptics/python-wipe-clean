@@ -1,4 +1,12 @@
-# Wipe Clean
+
+<h1 align="center">
+  <a href="https://pypi.org/project/wipe-clean/">
+    <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="200" height="200">
+  </a>
+</h1>
+
+---
+<div align="center">
 
 ![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)
@@ -11,16 +19,22 @@
 [![Mac OS](https://img.shields.io/badge/MacOS--9cf?logo=Apple&style=social)](https://github.com/wenoptics/python-wipe-clean)
 [![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://github.com/wenoptics/python-wipe-clean)
 
+</div>
+
 ---
 
+# Wipe Clean
+
 Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. **0-dependency**.
+
+
+![demo](https://github.com/wenoptics/python-wipe-clean/blob/master/doc/terminal.gif?raw=true)
+
+Install with pip:
 
 ```bash
 pip install wipe-clean
 ```
-
-![demo](https://github.com/wenoptics/python-wipe-clean/blob/master/doc/terminal.gif?raw=true)
-
 
 > `wipe-clean` currently requires Python 3.6.1 and above. Note that Python 3.6.0 is
  not supported due to lack of `NamedTuples` typing.
@@ -34,13 +48,13 @@ Just:
 wipe-clean
 ```
 
-Use `-h, --help` to show all available options 
+Use `-h, --help` to show all available options
 
 ```bash
 wipe-clean -h
 ```
 
-## Advanced Usages
+## Advanced usages
 
 ### 1. Use API
 
@@ -49,16 +63,16 @@ from wipe_clean.main import cli as wc_cli
 
 wc_cli()
 # Or with arguments
-wc_cli('-f=0.005', '-m=0')
+wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
 ```
 
 ### 2. Customization
 
 It's possible to design your own brush shape and animation!
 
-#### Example Brush
+#### Example brush
 
-To create a new brush type, just implement the `Brush` interface.
+To create a new brush type, implement the `Brush` interface, e.g.
 
 ```python
 from wipe_clean.brush import Brush, ScreenPointDrawing, ScreenPoint as P
@@ -80,9 +94,9 @@ This will define a brush like this:
 ##
 ```
 
-#### Example Path
+#### Example path
 
-Similarly, you can implement the `Path` interface.
+Similarly, you can implement the `Path` interface to create a new brush path.
 
 ```python
 import math
@@ -103,7 +117,7 @@ class MySimplePath(Path):
 See [`DEVELOPMENT.md`](./DEVELOPMENT.md)
 
 
-## Related Projects
+## Related projects
 
 - [`JeanJouliaCode/wipeclean`](https://github.com/JeanJouliaCode/wipeClean) - JavaScript version
 

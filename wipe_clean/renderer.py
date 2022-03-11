@@ -12,7 +12,12 @@ def clamp(minimum, v, maximum):
     return max(minimum, min(v, maximum))
 
 
-def sleep(second: float):
+async def sleep(second: float):
+    if second <= 0:
+        return
+    if second > 0.1:
+        return await asyncio.sleep(second)
+    # For smaller time, use a dump way (hopefully) makes the timer more accurate
     start = time.monotonic()
     while time.monotonic() - start < second:
         continue
@@ -86,7 +91,6 @@ class AnimationRender(Render):
         Return a time-index chuck of `TimedDrawStruct`.
 
         Assuming `frames` are sorted (by time).
-        (e.g. `self._scheduled` is always sorted)
         """
         if len(frames) == 0:
             return []
@@ -123,6 +127,7 @@ class AnimationRender(Render):
             return
 
         chuck_by_time = self._process_frames(
+            # Pop all the items (sorted)
             heapq.nsmallest(len(self._scheduled), self._scheduled)
         )
 
@@ -131,7 +136,7 @@ class AnimationRender(Render):
             delay = chuck[0].time_s - start_time
 
             if delay > min_frame_delay:
-                sleep(delay)
+                await sleep(delay)
 
             start_time = time.monotonic()
             for st in chuck:
