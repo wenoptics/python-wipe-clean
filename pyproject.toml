@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "wipe-clean"
-version = "0.1.4"
-description = "Clear your terminal in a ritual way"
+version = "0.1.5"
+description = "Clear your terminal in a ritual way. Zero dependency."
 authors = ["wenoptk <wenoptics@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/wenoptics/python-wipe-clean"
@@ -17,7 +17,6 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-rich = "^11.2.0"
 
 [tool.poetry.dev-dependencies]
 

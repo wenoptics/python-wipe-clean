@@ -13,7 +13,7 @@
 
 ---
 
-Clear your terminal in a ritual way. Works on Windows, Linux and macOS.
+Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. [0-dependency](./poetry.lock).
 
 ```bash
 pip install wipe-clean
@@ -22,10 +22,8 @@ pip install wipe-clean
 ![demo](https://github.com/wenoptics/python-wipe-clean/blob/master/doc/terminal.gif?raw=true)
 
 
-> `wipe-clean` requires Python 3.6.1 and above. Note that Python 3.6.0 is
+> `wipe-clean` currently requires Python 3.6.1 and above. Note that Python 3.6.0 is
  not supported due to lack of `NamedTuples` typing.
-
-> `wipe-clean` is moving to pursue **0-dependency**, see the [Roadmap](#roadmap).
 
 
 ## Usages
@@ -104,4 +102,4 @@ See [`DEVELOPMENT.md`](./DEVELOPMENT.md)
   _The first brush type (`BrushWipe`) and path animations (`PathZigZag`, `PathRectEdge`) are direct ports
   of `JeanJouliaCode/wipeclean`. Credits go to JeanJouliaCode!_
 
-- [`Textualize/rich`](https://github.com/Textualize/rich) - _Inspiring textual UI library_
+- [`Textualize/rich`](https://github.com/Textualize/rich) - _An inspiring textual UI library_
