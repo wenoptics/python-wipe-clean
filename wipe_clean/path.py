@@ -15,7 +15,8 @@ class Path(ABC):
     def get_points(self) -> Iterable[PathPoint]:
         pass
 
-    def get_points_list(self):
+    def get_points_list(self) -> List[PathPoint]:
+        """Return a list of points"""
         return list(self.get_points())
 
 

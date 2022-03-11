@@ -11,9 +11,9 @@ Some interesting APIs from `rich`
 - `LiveRender`
 
 
-## Objectives
+## TODOs
 
-### 1. How to use a `rich.control`
+### 1. ✅ How to use a `rich.control`
 
 We can use `Console.control()` to insert any controls.
 
@@ -33,3 +33,18 @@ r.print('456')
 ```
  12456
 ```
+
+### 2. Make 0-dependency (WIP)
+
+### 3. Make compatible with python 2.7
+
+Combining with #2, this will benefit many Linux distributions.
+
+### 4. (Doc) asciinema
+
+### 5. ✅ Documentation on `Path` and `Brush` usages for customization/extension
+
+### 6. Config from command-line
+
+e.g. `speed`, animation profiles
+

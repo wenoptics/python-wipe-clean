@@ -38,7 +38,7 @@ def main():
     r.clear()
 
 
-def cli():
+def cli(*args):
 
     import argparse
     from argparse import RawTextHelpFormatter
@@ -95,7 +95,7 @@ def cli():
     """
 
     parser = argparse.ArgumentParser(description=art_extended + text, formatter_class=RawTextHelpFormatter)
-    args = parser.parse_args()
+    args = parser.parse_args(args or sys.argv)
     main()
 
 

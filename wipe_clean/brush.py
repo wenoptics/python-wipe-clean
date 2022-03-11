@@ -6,8 +6,15 @@ from .screen import ScreenPoint, ScreenPointDrawing
 
 
 class Brush(ABC):
+    """
+    Brush base class
+
+    You may implement your own brush style.
+    """
+
     @abstractmethod
-    def get_points(self, x, y, angle) -> List[ScreenPoint]:
+    def get_points(self, x, y, angle) -> List[ScreenPointDrawing]:
+        """Return all the brush points"""
         pass
 
 
