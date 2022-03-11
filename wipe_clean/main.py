@@ -23,17 +23,21 @@ def main():
     path_points = PathZigZag(**common_brush_cfg).get_points_list()
     path_points += PathRectEdge(path_points[-1], **common_brush_cfg).get_points_list()
 
-    frame_rate = 0.006
+    frame_rate = 0.005
     for idx, pp in enumerate(path_points):
         for bwp in bw.get_points(*pp.coord, pp.angle):
             r.schedule_draw(
                 timeout=idx * frame_rate,
                 p=bwp.coord,
                 s='#',
-                clean_after=0.03
+                clean_after=0.005
             )
 
-    asyncio.run(r.render_frames())
+    try:
+        asyncio.run(r.render_frames(min_frame_delay=0.005))
+    except KeyboardInterrupt:
+        pass
+
     r.move_cursor_home()
     r.clear()
 
@@ -57,7 +61,7 @@ def cli(*args):
     $          N,      gP
      "N          *g  g"
         N,        ,P"
-          *g,,,,gP
+   _______*g,,,,gP_____________________________
      
     """
 
@@ -95,7 +99,7 @@ def cli(*args):
     """
 
     parser = argparse.ArgumentParser(description=art_extended + text, formatter_class=RawTextHelpFormatter)
-    args = parser.parse_args(args or sys.argv)
+    args = parser.parse_args(args or sys.argv[1:])
     main()
 
 
