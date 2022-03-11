@@ -3,25 +3,28 @@ import heapq
 import time
 from typing import NamedTuple, List, Optional
 
-from rich.console import Console
-from rich.control import Control
-
+from ._rich.control import ControlType, CONTROL_CODES_FORMAT
+from ._rich.simple_console import SimpleConsole
 from .screen import ScreenPoint
 
 
-class Render:
-    def __init__(self, console: Console = None):
-        self.console = console or Console()
+def clamp(minimum, v, maximum):
+    return max(minimum, min(v, maximum))
+
+
+class Render(SimpleConsole):
 
     @property
     def screen_size(self):
-        return self.console.size
+        return self.size
 
     def move_cursor_home(self):
-        self.console.control(Control.home())
+        char_control = CONTROL_CODES_FORMAT[ControlType.HOME]()
+        self.write(char_control)
 
     def clear(self):
-        self.console.control(Control.clear())
+        char_control = CONTROL_CODES_FORMAT[ControlType.CLEAR]()
+        self.write(char_control)
 
     def draw_string_at(self, p: ScreenPoint, s: str):
         def clamp(minimum, v, maximum):
