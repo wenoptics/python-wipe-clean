@@ -93,7 +93,7 @@ Combining with #2, this will benefit many Linux distributions.
 
 #### 5. ✅ Documentation on `Path` and `Brush` usages for customization/extension
 
-#### 6. Config from command-line
+#### 6. ✅ Config from command-line
 
 e.g. `speed`, animation profiles
 

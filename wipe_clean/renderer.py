@@ -1,7 +1,7 @@
 import asyncio
 import heapq
 import time
-from typing import NamedTuple, List, Optional, Tuple
+from typing import NamedTuple, List, Optional
 
 from ._rich.control import ControlType, CONTROL_CODES_FORMAT
 from ._rich.simple_console import SimpleConsole
@@ -10,6 +10,12 @@ from .screen import ScreenPoint
 
 def clamp(minimum, v, maximum):
     return max(minimum, min(v, maximum))
+
+
+def sleep(second: float):
+    start = time.monotonic()
+    while time.monotonic() - start < second:
+        continue
 
 
 class Render(SimpleConsole):
@@ -21,10 +27,12 @@ class Render(SimpleConsole):
     def move_cursor_home(self):
         char_control = CONTROL_CODES_FORMAT[ControlType.HOME]()
         self.write(char_control)
+        self.flush()
 
     def clear(self):
         char_control = CONTROL_CODES_FORMAT[ControlType.CLEAR]()
         self.write(char_control)
+        self.flush()
 
     def draw_string_at(self, p: ScreenPoint, s: str, flush=True):
 
@@ -123,7 +131,7 @@ class AnimationRender(Render):
             delay = chuck[0].time_s - start_time
 
             if delay > min_frame_delay:
-                await asyncio.sleep(delay)
+                sleep(delay)
 
             start_time = time.monotonic()
             for st in chuck:

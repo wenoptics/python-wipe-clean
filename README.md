@@ -13,7 +13,7 @@
 
 ---
 
-Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. [0-dependency](./poetry.lock).
+Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. **0-dependency**.
 
 ```bash
 pip install wipe-clean
@@ -34,6 +34,12 @@ Just:
 wipe-clean
 ```
 
+Use `-h, --help` to show all available options 
+
+```bash
+wipe-clean -h
+```
+
 ## Advanced Usages
 
 ### 1. Use API
@@ -42,6 +48,8 @@ wipe-clean
 from wipe_clean.main import cli as wc_cli
 
 wc_cli()
+# Or with arguments
+wc_cli('-f=0.005', '-m=0')
 ```
 
 ### 2. Customization
@@ -84,7 +92,7 @@ class MySimplePath(Path):
     def get_points(self) -> Iterable[PathPoint]:
         return [
             PathPoint(P(10, 10), math.radians(45)),
-            PathPoint(P(20, 5), math.radians(0)),
+            PathPoint(P(20,  5), math.radians( 0)),
             PathPoint(P(40, 20), math.radians(90)),
         ]
 ```

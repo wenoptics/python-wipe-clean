@@ -6,7 +6,14 @@ from .path import PathZigZag, PathRectEdge
 from .renderer import AnimationRender
 
 
-def main():
+def main(
+        frame_interval_s=0.005,
+        clean_after=None,
+        min_frame_delay=0.005
+):
+    if clean_after is None:
+        clean_after = 0.05
+
     r = AnimationRender()
 
     # You might customize the wipe brush
@@ -23,23 +30,22 @@ def main():
     path_points = PathZigZag(**common_brush_cfg).get_points_list()
     path_points += PathRectEdge(path_points[-1], **common_brush_cfg).get_points_list()
 
-    frame_rate = 0.005
     for idx, pp in enumerate(path_points):
         for bwp in bw.get_points(*pp.coord, pp.angle):
             r.schedule_draw(
-                timeout=idx * frame_rate,
+                timeout=idx * frame_interval_s,
                 p=bwp.coord,
-                s='#',
-                clean_after=0.005
+                s=bwp.char,
+                clean_after=clean_after
             )
 
     try:
-        asyncio.run(r.render_frames(min_frame_delay=0.005))
+        asyncio.run(r.render_frames(min_frame_delay))
     except KeyboardInterrupt:
         pass
 
-    r.move_cursor_home()
     r.clear()
+    r.move_cursor_home()
 
 
 def cli(*args):
@@ -98,10 +104,21 @@ def cli(*args):
     wipe-clean - Clean your terminal in a ritual way
     """
 
-    parser = argparse.ArgumentParser(description=art_extended + text, formatter_class=RawTextHelpFormatter)
-    args = parser.parse_args(args or sys.argv[1:])
-    main()
+    parser = argparse.ArgumentParser(description=art_ascii + text, formatter_class=RawTextHelpFormatter)
+    parser.add_argument('-f', '--frame-interval', type=float, default=0.005, help='Frame interval (in second)')
+    parser.add_argument('-c', '--clean-after', type=float, default=0.005, help='Clean drawn delay (in second)')
+    parser.add_argument('-m', '--min-frame-delay', type=float, default=0.005,
+                        help='Minimum frame delay (in second). A delay will only be will be'
+                             ' scheduled when frame interval is larger than this value.'
+                             ' This may help solve the inaccurate sleep on Windows.')
+
+    args = parser.parse_args(args)
+    main(
+        frame_interval_s=args.frame_interval,
+        clean_after=args.clean_after,
+        min_frame_delay=args.min_frame_delay
+    )
 
 
 if __name__ == '__main__':
-    sys.exit(cli())
+    sys.exit(cli(sys.argv[1:]))
