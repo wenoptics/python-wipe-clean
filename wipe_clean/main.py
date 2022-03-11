@@ -112,13 +112,19 @@ def cli(*args):
                              ' scheduled when frame interval is larger than this value.'
                              ' This may help solve the inaccurate sleep on Windows.')
 
-    args = parser.parse_args(args)
+    parsed_args = parser.parse_args(args)
     main(
-        frame_interval_s=args.frame_interval,
-        clean_after=args.clean_after,
-        min_frame_delay=args.min_frame_delay
+        frame_interval_s=parsed_args.frame_interval,
+        clean_after=parsed_args.clean_after,
+        min_frame_delay=parsed_args.min_frame_delay
+    )
+
+
+def _outer_cli():
+    sys.exit(
+        cli(*sys.argv[1:])
     )
 
 
 if __name__ == '__main__':
-    sys.exit(cli(sys.argv[1:]))
+    _outer_cli()
