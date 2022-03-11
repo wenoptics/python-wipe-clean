@@ -2,7 +2,7 @@
 
 # Wipe Clean
 
-<a href="https://pypi.org/project/wipe-clean/">
+<a href="https://github.com/wenoptics/python-wipe-clean">
   <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="200" height="200">
 </a>
 
@@ -20,6 +20,8 @@
 </div>
 
 ---
+
+## wipe-clean
 
 Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. **0-dependency**.
 
