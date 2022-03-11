@@ -1,3 +1,5 @@
+# Wipe Clean
+
 
 <div align="center">
 <a href="https://pypi.org/project/wipe-clean/">
@@ -21,8 +23,6 @@
 </div>
 
 ---
-
-# Wipe Clean
 
 Clear your terminal in a _ritual_ way. Works on Windows, Linux and macOS. **0-dependency**.
 
