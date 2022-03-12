@@ -18,6 +18,7 @@ Clear your terminal in a _fun_ way. Works on Windows, Linux and macOS. **0-depen
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](#wipe-clean)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)](#wipe-clean)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ce16faa60287059ad2ed/maintainability)](https://codeclimate.com/github/wenoptics/python-wipe-clean/maintainability)
 
 [![PyPI](https://img.shields.io/pypi/v/wipe-clean?logo=pypi)](https://pypi.org/project/wipe-clean/)
 [![PyPI - Status](https://img.shields.io/pypi/status/wipe-clean)](https://pypi.org/project/wipe-clean/)
