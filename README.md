@@ -6,8 +6,8 @@
   <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="200" height="200">
 </a>
 
-![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](#wipe-clean)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)](#wipe-clean)
 
 [![PyPI](https://img.shields.io/pypi/v/wipe-clean?logo=pypi)](https://pypi.org/project/wipe-clean/)
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/wipe-clean)](https://pypi.org/project/wipe-clean/)
