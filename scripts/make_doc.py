@@ -14,7 +14,7 @@ PROJECT_ROOT = (CUR_DIR / '..').resolve()
 
 env = Environment(
     loader=FileSystemLoader(CUR_DIR/'templates'),
-    autoescape=True
+    autoescape=False  # Autoscaping will mess up the example code block
 )
 
 

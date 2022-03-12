@@ -1,7 +1,7 @@
 
 <!-- -------------------------------------------------------------
 
-README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY. 
+README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY.
 
 --------------------------------------------------------------- -->
 
@@ -75,7 +75,7 @@ from wipe_clean.main import cli as wc_cli
 
 wc_cli()
 # Or with arguments
-wc_cli(&#39;--frame-interval=0.005&#39;, &#39;--min-frame-delay=0&#39;)
+wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
 ```
 
 ### 2. Customization
@@ -90,12 +90,12 @@ To create a new brush type, implement the `Brush` interface, e.g.
 from wipe_clean.brush import Brush, ScreenPointDrawing, ScreenPoint as P
 
 class Wipe2x2(Brush):
-    def get_points(self, x, y, angle) -&gt; List[ScreenPointDrawing]:
+    def get_points(self, x, y, angle) -> List[ScreenPointDrawing]:
         return [
-            ScreenPointDrawing(P(x, y), &#39;#&#39;),
-            ScreenPointDrawing(P(x + 1, y), &#39;#&#39;),
-            ScreenPointDrawing(P(x, y + 1), &#39;#&#39;),
-            ScreenPointDrawing(P(x + 1, y + 1), &#39;#&#39;),
+            ScreenPointDrawing(P(x    , y    ), '#'),  # noqa: E202,E203
+            ScreenPointDrawing(P(x + 1, y    ), '#'),  # noqa: E202,E203
+            ScreenPointDrawing(P(x    , y + 1), '#'),  # noqa: E202,E203
+            ScreenPointDrawing(P(x + 1, y + 1), '#'),
         ]
 ```
 
@@ -115,10 +115,10 @@ import math
 from wipe_clean.path import Path, PathPoint, ScreenPoint as P
 
 class MySimplePath(Path):
-    def get_points(self) -&gt; Iterable[PathPoint]:
+    def get_points(self) -> Iterable[PathPoint]:
         return [
             PathPoint(P(10, 10), math.radians(45)),
-            PathPoint(P(20, 5), math.radians(0)),
+            PathPoint(P(20,  5), math.radians(0)),
             PathPoint(P(40, 20), math.radians(90)),
         ]
 ```
