@@ -1,7 +1,9 @@
 import asyncio
 import platform
+import random
 import sys
 
+from .fun import all_art
 from .brush import BrushWipe
 from .path import PathZigZag, PathRectEdge
 from .renderer import AnimationRender
@@ -50,56 +52,8 @@ def main(
 
 
 def cli(*args):
-
     import argparse
     from argparse import RawTextHelpFormatter
-
-    art_ascii = """
-     
-                      g*R,
-                    4`    *g
-                 ,P    ,Rw  "w
-               ,P    ,P   "W  "N
-             gP    gP       ]M   $
-           g"    g"       ,P ,P g"
-         g`,   &`       gP gP g"
-       g" "W   N      g" w" A`
-     4`     "N   %, N`   ,P
-    $          N,      gP
-     "N          *g  g"
-        N,        ,P"
-   _______*g,,,,gP_____________________________
-     
-    """
-
-    art_extended = """
-     
-           █▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-           █▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▀▀▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▄▓▓ ▐▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▄▓▓▓▓ ▐▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓███████████████▓▓▓▓▓▓▀▀▀  ▓▓▓▓    ▀ ▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▒█████▓▓▓▓▓▓ ▐▓▌ ▓▓▓▓▌ ▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▒█▒▒░█▌▓▓▓▓▓▌ ▓▓ ▓▓▓▓  ▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▒█▒▒▒█▌▓▓▓▓▓▓▄▓▓▓▄▄▄▄▓▄▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▒█▒▒▒█▌▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▒█▒▒▒██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓▓▓▓█▒▒▒▒▒▒▒▒▒▒█▒▄███▀▀░░▀█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓▓▓██▀█▄░▒▒▒░░▄██▀▀░░▒▒▒▒▒▒▄█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌▓▓█▀░▒▒░▀▀███▀▀░░▒▒▒▒▒▒▒▒▒▒▒▀█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           █▌██░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▄█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-           ███░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-       ▄▄█▀▀░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-        █░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒████████▀▀▀▀▀▀█████
-         █░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄█▀
-         ▐█░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▄██▀
-          ▐█░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▄██▀
-           ▀█░▒░▄▄▄▄▄▄▄▄▄▄▄██▀▀▀
-            ▀█▀▀
-     
-    """
 
     text = """
     wipe-clean - Clean your terminal in a ritual way
@@ -119,7 +73,7 @@ def cli(*args):
             'm': 0
         }
 
-    parser = argparse.ArgumentParser(description=art_ascii + text, formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description=random.choice(all_art) + text, formatter_class=RawTextHelpFormatter)
     parser.add_argument('-f', '--frame-interval', default=default['f'],
                         type=float, help='Frame interval (in second)')
     parser.add_argument('-c', '--clean-after', default=default['c'],

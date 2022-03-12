@@ -32,8 +32,8 @@ class BrushWipe(Brush):
         for step in range(0, int(half_width * self.deformation_factor)):
             fac = half_width / (half_width * self.deformation_factor) * step
             p = ScreenPoint(
-                x + math.cos(angle)          * fac * self.deformation_factor,
-                y + math.sin(angle)          * fac
+                x + math.cos(angle)          * fac * self.deformation_factor,  # noqa: E221
+                y + math.sin(angle)          * fac                             # noqa: E221
             )
             ret.append(ScreenPointDrawing(p, '#'))
 
