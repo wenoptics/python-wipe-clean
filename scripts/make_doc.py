@@ -94,10 +94,10 @@ def render_readme() -> str:
     header = '''
     <!-- -------------------------------------------------------------
 
-    README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY. 
+    README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY.
     
     --------------------------------------------------------------- -->
-    '''
+    '''  # noqa: W293
     return textwrap.dedent(header) + '\n\n' + ret
 
 
