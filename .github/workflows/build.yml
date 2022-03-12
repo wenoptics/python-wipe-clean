@@ -27,12 +27,32 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      # Cache $HOME/.local (primarily for poetry install).
+      #   Ref: https://www.peterbe.com/plog/install-python-poetry-github-actions-faster
+      - name: Load cached $HOME/.local
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.local
+          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/build.yml') }}
+
       - name: Setup Python
         uses: actions/setup-python@v2.3.2
         with:
           python-version: '3.x'
-      - run: pip install -r scripts/requirements.ci.txt
-      - run: python scripts/make_doc.py
+
+      - name: Install Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+
+      - name: Run Tests
+        run: |
+          poetry install
+          poetry run flake8
+          poetry run pytest
+
+      # - run: pip install -r scripts/requirements.ci.txt
+      - name: Build README.md
+        run: poetry run python scripts/make_doc.py
 
       - name: Commit README update
         uses: stefanzweifel/git-auto-commit-action@v4
