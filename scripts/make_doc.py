@@ -5,8 +5,17 @@ import sys
 import textwrap
 from pathlib import Path
 
+from jinja2 import Environment, FileSystemLoader
+from marko import Markdown
+from marko.ext.toc import Toc
+
 CUR_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = (CUR_DIR / '..').resolve()
+
+env = Environment(
+    loader=FileSystemLoader(CUR_DIR/'templates'),
+    autoescape=True
+)
 
 
 def extract_examples():
@@ -46,9 +55,54 @@ def extract_examples():
     return ret
 
 
-if __name__ == '__main__':
-    import pprint
+def make_toc(md_txt: str) -> str:
+    """
+    Return the 1st-level of table of content of a given Markdown text.
 
-    _ = extract_examples()
-    pprint.pprint(_)
-    assert len(_) == 3
+    Return example:
+    <p>
+    <a href="#install">Install</a> • <a href="#usages">Usages</a> • <a href="#advanced-usages">Advanced usages</a>
+     • <a href="#roadmap">Roadmap</a> • <a href="#related-projects">Related projects</a>
+    </p>
+    """
+    openning = "<p>"
+    closing = "</p>"
+    item_format = '<a href="#{slug}">{text}</a>'
+
+    markdown = Markdown(extensions=[Toc(openning, closing, item_format)])
+    markdown(md_txt)
+    ret: str = markdown.renderer.render_toc(maxdepth=1)
+
+    # Insert separators
+    sep = ' &#8226; '
+    ret = re.sub(r'</a>\s*<a', f'</a>{sep}<a', ret)
+    return ret
+
+
+def render_readme() -> str:
+    tpl_file = CUR_DIR / 'templates' / 'README.md.j2'
+
+    template = env.get_template("README.md.j2")
+    with tpl_file.open() as f:
+        tpl = f.read()
+
+    ret = template.render(**{
+        'toc': make_toc(tpl),
+        'test_readme_examples': extract_examples()
+    })
+
+    header = '''
+    <!-- -------------------------------------------------------------
+
+    README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY. 
+    
+    --------------------------------------------------------------- -->
+    '''
+    return textwrap.dedent(header) + '\n\n' + ret
+
+
+if __name__ == '__main__':
+
+    # with (PROJECT_ROOT / 'README.preview.md').open('w') as _:
+    with (PROJECT_ROOT / 'README.md').open('w') as _:
+        _.write(render_readme())

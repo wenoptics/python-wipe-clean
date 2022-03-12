@@ -1,11 +1,3 @@
-
-<!-- -------------------------------------------------------------
-
-README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY. 
-
---------------------------------------------------------------- -->
-
-
 <div align="center">
 
 <a href="https://github.com/wenoptics/python-wipe-clean">
@@ -27,10 +19,7 @@ Clear your terminal in a _fun_ way. Works on Windows, Linux and macOS. **0-depen
 [![Mac OS](https://img.shields.io/badge/MacOS--9cf?logo=Apple&style=social)](https://github.com/wenoptics/python-wipe-clean)
 [![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://github.com/wenoptics/python-wipe-clean)
 
-<p>
-<a href="#install">Install</a> &#8226; <a href="#usages">Usages</a> &#8226; <a href="#advanced-usages">Advanced usages</a> &#8226; <a href="#roadmap">Roadmap</a> &#8226; <a href="#related-projects">Related projects</a>
-</p>
-
+{{ toc | safe }}
 
 ![demo](https://github.com/wenoptics/python-wipe-clean/blob/master/doc/terminal.gif?raw=true)
 
@@ -71,11 +60,7 @@ wipe-clean -h
 You can use wipe-clean inside your project.
 
 ```python
-from wipe_clean.main import cli as wc_cli
-
-wc_cli()
-# Or with arguments
-wc_cli(&#39;--frame-interval=0.005&#39;, &#39;--min-frame-delay=0&#39;)
+{{ test_readme_examples['test_cli_usage'] }}
 ```
 
 ### 2. Customization
@@ -87,16 +72,7 @@ It's possible to design your own brush shape and animation.
 To create a new brush type, implement the `Brush` interface, e.g.
 
 ```python
-from wipe_clean.brush import Brush, ScreenPointDrawing, ScreenPoint as P
-
-class Wipe2x2(Brush):
-    def get_points(self, x, y, angle) -&gt; List[ScreenPointDrawing]:
-        return [
-            ScreenPointDrawing(P(x, y), &#39;#&#39;),
-            ScreenPointDrawing(P(x + 1, y), &#39;#&#39;),
-            ScreenPointDrawing(P(x, y + 1), &#39;#&#39;),
-            ScreenPointDrawing(P(x + 1, y + 1), &#39;#&#39;),
-        ]
+{{ test_readme_examples['test_example_brush'] }}
 ```
 
 This will define a brush like this:
@@ -111,16 +87,7 @@ This will define a brush like this:
 Similarly, you can implement the `Path` interface to create a new brush path.
 
 ```python
-import math
-from wipe_clean.path import Path, PathPoint, ScreenPoint as P
-
-class MySimplePath(Path):
-    def get_points(self) -&gt; Iterable[PathPoint]:
-        return [
-            PathPoint(P(10, 10), math.radians(45)),
-            PathPoint(P(20, 5), math.radians(0)),
-            PathPoint(P(40, 20), math.radians(90)),
-        ]
+{{ test_readme_examples['test_example_path'] }}
 ```
 
 
