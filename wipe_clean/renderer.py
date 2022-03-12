@@ -40,7 +40,6 @@ class Render(SimpleConsole):
         self.flush()
 
     def draw_string_at(self, p: ScreenPoint, s: str, flush=True):
-
         # if p.x > self.screen_size.width - 1:
         #     return
         # if p.y > self.screen_size.height - 2:
@@ -63,9 +62,8 @@ class Render(SimpleConsole):
 
 
 class AnimationRender(Render):
-
     class TimedDrawStruct(NamedTuple):
-        time_s: float
+        frame_idx: int
         point: ScreenPoint
         char: str
 
@@ -77,13 +75,13 @@ class AnimationRender(Render):
 
     def schedule_draw(
             self,
-            timeout: float, p: ScreenPoint, s: str,
-            clean_after: Optional[float] = None
+            frame: int, p: ScreenPoint, s: str,
+            clean_after: Optional[int] = None
     ):
-        heapq.heappush(self._scheduled, AnimationRender.TimedDrawStruct(timeout, p, s))
+        heapq.heappush(self._scheduled, AnimationRender.TimedDrawStruct(frame, p, s))
 
         if clean_after is not None:
-            self.schedule_draw(timeout + clean_after, p, ' ', clean_after=None)
+            self.schedule_draw(frame + clean_after, p, ' ', clean_after=None)
 
     @staticmethod
     def _process_frames(frames: List[TimedDrawStruct]):
@@ -107,19 +105,20 @@ class AnimationRender(Render):
                 return
             chuck_by_time.append(chuck)
 
+        # Chunk all the frames in O(n) time
         slow, fast = 0, 1
         while True:
             if fast == len(frames):
                 _insert(frames[slow:fast])
                 break
-            if frames[fast].time_s != frames[slow].time_s:
+            if frames[fast].frame_idx != frames[slow].frame_idx:
                 _insert(frames[slow:fast])
                 slow = fast
             fast += 1
 
         return chuck_by_time
 
-    async def render_frames(self, min_frame_delay=0.006):
+    async def render_frames(self, frame_interval_s=0.005, min_sleep_delay=0.006):
 
         # NOTED: We assume all frames are already scheduled i.e. `self._scheduled` is fixed
 
@@ -131,17 +130,15 @@ class AnimationRender(Render):
             heapq.nsmallest(len(self._scheduled), self._scheduled)
         )
 
-        start_time = 0
+        current_frame = 0
         for chuck in chuck_by_time:
-            delay = chuck[0].time_s - start_time
+            empty_frames = chuck[0].frame_idx - current_frame
 
-            if delay > min_frame_delay:
-                await sleep(delay)
+            if empty_frames > 0:
+                await sleep(frame_interval_s * empty_frames)
 
-            start_time = time.monotonic()
             for st in chuck:
                 self.draw_string_at(st.point, st.char, flush=False)
             self.flush()
-            elapse = time.monotonic() - start_time
 
-            start_time = chuck[0].time_s + elapse
+            current_frame = chuck[0].frame_idx

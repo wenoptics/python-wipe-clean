@@ -15,7 +15,7 @@ def main(
         min_frame_delay=0
 ):
     if clean_after is None:
-        clean_after = 0.05
+        clean_after = 1
 
     r = AnimationRender()
 
@@ -36,14 +36,14 @@ def main(
     for idx, pp in enumerate(path_points):
         for bwp in bw.get_points(*pp.coord, pp.angle):
             r.schedule_draw(
-                timeout=idx * frame_interval_s,
+                frame=idx,
                 p=bwp.coord,
                 s=bwp.char,
                 clean_after=clean_after
             )
 
     try:
-        asyncio.run(r.render_frames(min_frame_delay))
+        asyncio.run(r.render_frames(frame_interval_s, min_frame_delay))
     except KeyboardInterrupt:
         pass
 
@@ -77,7 +77,7 @@ def cli(*args):
     parser.add_argument('-f', '--frame-interval', default=default['f'],
                         type=float, help='Frame interval (in second)')
     parser.add_argument('-c', '--clean-after', default=default['c'],
-                        type=float, help='Clean drawn delay (in second)')
+                        type=float, help='Clean drawn after number of frame(s)')
     parser.add_argument('-m', '--min-frame-delay', default=default['m'],
                         type=float, help='Minimum frame delay (in second). A delay will only be will be'
                                          ' scheduled when frame interval is larger than this value.'
