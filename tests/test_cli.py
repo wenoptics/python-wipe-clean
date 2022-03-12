@@ -11,4 +11,4 @@ def test_simple():
 
 
 if __name__ == '__main__':
-    cli('--frame-interval=0.005', '--min-frame-delay=0.03')
+    cli('--frame-interval=0.003')

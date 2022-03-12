@@ -1,11 +1,15 @@
 import asyncio
 import heapq
+import platform
 import time
-from typing import NamedTuple, List, Optional
+from functools import cache
+from typing import NamedTuple, List, Optional, Dict, Union, Tuple
 
 from ._rich.control import ControlType, CONTROL_CODES_FORMAT
 from ._rich.simple_console import SimpleConsole
 from .screen import ScreenPoint
+
+WINDOWS = platform.system() == 'Windows'
 
 
 def clamp(minimum, v, maximum):
@@ -17,15 +21,15 @@ async def sleep(second: float):
         return
     if second > 0.1:
         return await asyncio.sleep(second)
-    # For smaller time, use a dump way (hopefully) makes the timer more accurate
-    start = time.monotonic()
-    while time.monotonic() - start < second:
+    start = time.perf_counter()
+    while time.perf_counter() - start < second:
         continue
 
 
 class Render(SimpleConsole):
 
     @property
+    @cache
     def screen_size(self):
         return self.size
 
@@ -39,7 +43,12 @@ class Render(SimpleConsole):
         self.write(char_control)
         self.flush()
 
-    def draw_string_at(self, p: ScreenPoint, s: str, flush=True):
+    def string_at(self, p: Union[Tuple, ScreenPoint], s: str) -> str:
+        """Use the terminal control character to position a string"""
+
+        if not isinstance(p, ScreenPoint):
+            p = ScreenPoint(*p)
+
         # if p.x > self.screen_size.width - 1:
         #     return
         # if p.y > self.screen_size.height - 2:
@@ -55,17 +64,26 @@ class Render(SimpleConsole):
         y = int(clamp(0, p.y, self.screen_size.height - 2))
 
         char_control = CONTROL_CODES_FORMAT[ControlType.CURSOR_MOVE_TO](x, y)
-        self.write(char_control + s)
+        return char_control + s
+
+    def draw_string_at(self, p: Union[Tuple, ScreenPoint], s: str, flush=True):
+        self.write(self.string_at(p, s))
 
         if flush:
             self.flush()
 
 
 class AnimationRender(Render):
+    CLEAR_CHAR = ' '
+
     class TimedDrawStruct(NamedTuple):
         frame_idx: int
         point: ScreenPoint
         char: str
+
+    class TimedDrawFullFrame(NamedTuple):
+        frame_idx: int
+        buffer: str
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,29 +99,40 @@ class AnimationRender(Render):
         heapq.heappush(self._scheduled, AnimationRender.TimedDrawStruct(frame, p, s))
 
         if clean_after is not None:
-            self.schedule_draw(frame + clean_after, p, ' ', clean_after=None)
+            self.schedule_draw(frame + clean_after, p, self.CLEAR_CHAR, clean_after=None)
 
-    @staticmethod
-    def _process_frames(frames: List[TimedDrawStruct]):
+    def _process_frames(self, frames: List[TimedDrawStruct]) -> List[TimedDrawFullFrame]:
         """
-        Return a time-index chuck of `TimedDrawStruct`.
+        Return a time-indexed full frame. The potential issue of this implementation is that,
+        The full frame string will be fixed during such `process`-time, so if terminal got resized this,
+        the drawing will be messed up.
 
-        Assuming `frames` are sorted (by time).
+        Assuming `frames` are already sorted (by time).
         """
         if len(frames) == 0:
             return []
-        if len(frames) == 1:
-            return [frames]
 
-        # The chuck, they should have the same `time_s` values
-        chuck_by_time: List[
-            List[AnimationRender.TimedDrawStruct]
-        ] = []
+        frame_list: List[AnimationRender.TimedDrawFullFrame] = []
 
         def _insert(chuck: List[AnimationRender.TimedDrawStruct]):
             if not chuck:
                 return
-            chuck_by_time.append(chuck)
+
+            frame_idx = chuck[0].frame_idx
+            frame: Dict[ScreenPoint, str] = {}
+
+            for tds in chuck:
+                if tds.frame_idx != frame_idx:
+                    raise RuntimeError('All the `TimedDrawStruct`s must have the same frame index')
+
+                same_pos = frame.get(tds.point)
+                if tds.char == self.CLEAR_CHAR and same_pos and same_pos != self.CLEAR_CHAR:
+                    # If the (x, y) is already scheduled with a non-clear-char, don't put the clear-char here.
+                    continue
+                frame[tds.point] = tds.char
+
+            frame_str = ''.join([self.string_at(p, frame[p]) for p in frame])
+            frame_list.append(AnimationRender.TimedDrawFullFrame(frame_idx, frame_str))
 
         # Chunk all the frames in O(n) time
         slow, fast = 0, 1
@@ -116,29 +145,30 @@ class AnimationRender(Render):
                 slow = fast
             fast += 1
 
-        return chuck_by_time
+        return frame_list
 
-    async def render_frames(self, frame_interval_s=0.005, min_sleep_delay=0.006):
+    async def render_frames(self, frame_interval_s=0.005, min_sleep_delay=0):
 
         # NOTED: We assume all frames are already scheduled i.e. `self._scheduled` is fixed
 
         if len(self._scheduled) == 0:
             return
 
-        chuck_by_time = self._process_frames(
+        full_frame_list = self._process_frames(
             # Pop all the items (sorted)
             heapq.nsmallest(len(self._scheduled), self._scheduled)
         )
 
         current_frame = 0
-        for chuck in chuck_by_time:
-            empty_frames = chuck[0].frame_idx - current_frame
+        for frame in full_frame_list:
+            empty_frames = frame.frame_idx - current_frame
 
             if empty_frames > 0:
-                await sleep(frame_interval_s * empty_frames)
+                sleep_time = frame_interval_s * empty_frames
+                if sleep_time > min_sleep_delay:
+                    await sleep(sleep_time)
 
-            for st in chuck:
-                self.draw_string_at(st.point, st.char, flush=False)
+            self.write(frame.buffer)
             self.flush()
 
-            current_frame = chuck[0].frame_idx
+            current_frame = frame.frame_idx

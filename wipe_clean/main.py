@@ -1,5 +1,4 @@
 import asyncio
-import platform
 import random
 import sys
 
@@ -10,7 +9,7 @@ from .renderer import AnimationRender
 
 
 def main(
-        frame_interval_s=0.005,
+        frame_interval_s=0.003,
         clean_after=None,
         min_frame_delay=0
 ):
@@ -59,19 +58,11 @@ def cli(*args):
     wipe-clean - Clean your terminal in a ritual way
     """
 
-    # Windows timer precision is bad on Python
-    if platform.system() == 'Windows':
-        default = {
-            'f': 0.005,
-            'c': 0.005,
-            'm': 0.005
-        }
-    else:
-        default = {
-            'f': 0.004,
-            'c': 0.004,
-            'm': 0
-        }
+    default = {
+        'f': 0.003,
+        'c': 1,
+        'm': 0
+    }
 
     parser = argparse.ArgumentParser(description=random.choice(all_art) + text, formatter_class=RawTextHelpFormatter)
     parser.add_argument('-f', '--frame-interval', default=default['f'],
