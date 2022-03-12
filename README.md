@@ -9,7 +9,7 @@ README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY.
 <div align="center">
 
 <a href="https://github.com/wenoptics/python-wipe-clean">
-  <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="160" height="160">
+  <img src="https://github.com/wenoptics/python-wipe-clean/blob/master/doc/logo.png?raw=true" alt="Logo" width="160">
 </a>
 
 <h1>Wipe Clean</h1>
