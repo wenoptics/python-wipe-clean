@@ -22,9 +22,9 @@ def test_example_brush():
     class Wipe2x2(Brush):
         def get_points(self, x, y, angle) -> List[ScreenPointDrawing]:
             return [
-                ScreenPointDrawing(P(x, y), '#'),
-                ScreenPointDrawing(P(x + 1, y), '#'),
-                ScreenPointDrawing(P(x, y + 1), '#'),
+                ScreenPointDrawing(P(x    , y    ), '#'),  # noqa: E202,E203
+                ScreenPointDrawing(P(x + 1, y    ), '#'),  # noqa: E202,E203
+                ScreenPointDrawing(P(x    , y + 1), '#'),  # noqa: E202,E203
                 ScreenPointDrawing(P(x + 1, y + 1), '#'),
             ]
     # }--- End of example extraction
@@ -44,7 +44,7 @@ def test_example_path():
         def get_points(self) -> Iterable[PathPoint]:
             return [
                 PathPoint(P(10, 10), math.radians(45)),
-                PathPoint(P(20, 5), math.radians(0)),
+                PathPoint(P(20,  5), math.radians(0)),
                 PathPoint(P(40, 20), math.radians(90)),
             ]
     # }--- End of example extraction
