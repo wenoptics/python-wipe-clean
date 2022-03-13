@@ -97,7 +97,7 @@ Combining with #2, this will benefit many Linux distributions.
 
 e.g. `speed`, animation profiles
 
-#### 7. Animation scheduling revamp
+#### 7. ✅ Animation scheduling revamp
 
 - Frame-based scheduler (instead of time-based). This allows more accurate control on frame timer,
   which may help solve the Windows timer issue.
