@@ -17,12 +17,12 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-dataclasses = { version = ">=0.7,<0.9", python = "<3.7" }
+dataclasses = { version = ">=0.7,<0.9", python = "^3.6,<3.7" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
 flake8 = "^4.0.1"
-marko = {extras = ["toc"], version = "^1.2.0"}
+marko = { extras = ["toc"], version = "^1.2.0" }
 Jinja2 = "^3.0.3"
 
 [build-system]
