@@ -65,16 +65,16 @@ def make_toc(md_txt: str) -> str:
      • <a href="#roadmap">Roadmap</a> • <a href="#related-projects">Related projects</a>
     </p>
     """
-    openning = "<p>"
+    opening = "<p>"
     closing = "</p>"
     item_format = '<a href="#{slug}">{text}</a>'
 
-    markdown = Markdown(extensions=[Toc(openning, closing, item_format)])
+    markdown = Markdown(extensions=[Toc(opening, closing, item_format)])
     markdown(md_txt)
     ret: str = markdown.renderer.render_toc(maxdepth=1)
 
     # Insert separators
-    sep = ' &#8226; '
+    sep = ' &#8226; '  # This is a dot char
     ret = re.sub(r'</a>\s*<a', f'</a>{sep}<a', ret)
     return ret
 
