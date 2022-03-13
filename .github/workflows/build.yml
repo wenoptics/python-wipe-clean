@@ -40,7 +40,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: ~/.local
-          key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/build.yml') }}
+          key: dotlocal-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('.github/workflows/build.yml') }}
 
       - name: Setup Python
         uses: actions/setup-python@v2.3.2
