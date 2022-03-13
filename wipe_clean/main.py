@@ -42,7 +42,9 @@ def main(
             )
 
     try:
-        asyncio.run(r.render_frames(frame_interval_s, min_frame_delay))
+        asyncio.new_event_loop().run_until_complete(
+            r.render_frames(frame_interval_s, min_frame_delay)
+        )
     except KeyboardInterrupt:
         pass
 

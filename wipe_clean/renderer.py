@@ -2,18 +2,14 @@ import asyncio
 import heapq
 import platform
 import time
-from functools import cache
 from typing import NamedTuple, List, Optional, Dict, Union, Tuple
 
 from ._rich.control import ControlType, CONTROL_CODES_FORMAT
 from ._rich.simple_console import SimpleConsole
+from .utils import clamp, cache
 from .screen import ScreenPoint
 
 WINDOWS = platform.system() == 'Windows'
-
-
-def clamp(minimum, v, maximum):
-    return max(minimum, min(v, maximum))
 
 
 async def sleep(second: float):

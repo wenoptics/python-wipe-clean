@@ -1,3 +1,5 @@
+import sys
+from io import StringIO
 from typing import List, Iterable
 
 EXTRACTION_PATTERN = r'# Example extraction ---{' \
@@ -6,6 +8,9 @@ EXTRACTION_PATTERN = r'# Example extraction ---{' \
 
 
 def test_cli_usage():
+    ori_stdout = sys.stdout
+    sys.stdout = StringIO()
+
     # Example extraction ---{
     from wipe_clean.main import cli as wc_cli
 
@@ -13,6 +18,8 @@ def test_cli_usage():
     # Or with arguments
     wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
     # }--- End of example extraction
+
+    sys.stdout = ori_stdout
 
 
 def test_example_brush():
