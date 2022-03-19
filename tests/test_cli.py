@@ -1,6 +1,21 @@
+import contextlib
+from io import StringIO
+
 import pytest
 
 from wipe_clean.main import cli
+
+
+def test_cli_help():
+    import pytest
+    from wipe_clean.main import cli
+
+    stdout_capture = StringIO()
+    with contextlib.redirect_stdout(stdout_capture):
+        with pytest.raises(SystemExit):
+            cli('--help')
+
+    assert stdout_capture.getvalue().strip()
 
 
 @pytest.mark.skip

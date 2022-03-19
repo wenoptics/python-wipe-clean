@@ -1,4 +1,4 @@
-import sys
+import contextlib
 from io import StringIO
 from typing import List, Iterable
 
@@ -8,18 +8,18 @@ EXTRACTION_PATTERN = r'# Example extraction ---{' \
 
 
 def test_cli_usage():
-    ori_stdout = sys.stdout
-    sys.stdout = StringIO()
+    stdout_capture = StringIO()
+    with contextlib.redirect_stdout(stdout_capture):
 
-    # Example extraction ---{
-    from wipe_clean.main import cli as wc_cli
+        # Example extraction ---{
+        from wipe_clean.main import cli as wc_cli
 
-    wc_cli()
-    # Or with arguments
-    wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
-    # }--- End of example extraction
+        wc_cli()
+        # Or with arguments
+        wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
+        # }--- End of example extraction
 
-    sys.stdout = ori_stdout
+    assert stdout_capture.getvalue()
 
 
 def test_example_brush():

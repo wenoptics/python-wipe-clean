@@ -1,7 +1,25 @@
 # Development
 
-## Testing on Docker
 
+## Develop locally
+
+Dependencies:
+
+- [python-poetry](https://python-poetry.org/)
+
+Setup:
+
+```bash
+poetry install
+```
+
+Run local tests:
+
+```
+poetry run pytest
+```
+
+## Testing on Docker
 
 
 ### Interactive shell
@@ -64,6 +82,8 @@ Some interesting APIs from `rich`
 
 #### 1. ✅ How to use a `rich.control`
 
+<details><summary>Expand</summary>
+
 We can use `Console.control()` to insert any controls.
 
 e.g.
@@ -83,7 +103,9 @@ r.print('456')
  12456
 ```
 
-#### 2. ✅ Make 0-dependency (WIP)
+</details>
+
+#### 2. ✅ Make 0-dependency
 
 #### 3. Make compatible with python 2.7
 
@@ -95,10 +117,17 @@ Combining with #2, this will benefit many Linux distributions.
 
 #### 6. ✅ Config from command-line
 
+<details><summary>Expand</summary>
+
 e.g. `speed`, animation profiles
 
+</details>
+
 #### 7. ✅ Animation scheduling revamp
+
+<details><summary>Expand</summary>
 
 - Frame-based scheduler (instead of time-based). This allows more accurate control on frame timer,
   which may help solve the Windows timer issue.
 
+</details>

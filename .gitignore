@@ -1,1 +1,5 @@
+# Virtual environment
 .venv/
+
+dist/
+.pytest_cache/
