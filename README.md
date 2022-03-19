@@ -14,13 +14,14 @@ README.md is auto-generated. DO NOT MODIFY THIS FILE MANUALLY.
 
 <h1>Wipe Clean</h1>
 
-Clear your terminal in a _fun_ way. Works on Windows, Linux and macOS. **0-dependency**.
+Clear your terminal in a _fun_ way. Works on most modern terminals. **0-dependency**.
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](#wipe-clean)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wipe-clean?logo=python)](#wipe-clean)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ce16faa60287059ad2ed/maintainability)](https://codeclimate.com/github/wenoptics/python-wipe-clean/maintainability)
 
 [![PyPI](https://img.shields.io/pypi/v/wipe-clean?logo=pypi)](https://pypi.org/project/wipe-clean/)
+[![CI](https://github.com/wenoptics/python-wipe-clean/actions/workflows/build.yml/badge.svg)](https://github.com/wenoptics/python-wipe-clean/actions/workflows/build.yml)
 [![PyPI - Status](https://img.shields.io/pypi/status/wipe-clean)](https://pypi.org/project/wipe-clean/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dw/wipe-clean)](https://pypi.org/project/wipe-clean/)
 
@@ -67,7 +68,10 @@ wipe-clean -h
 
 ## Advanced usages
 
+
 ### 1. Use API
+
+<details><summary>Click to expand</summary>
 
 You can use wipe-clean inside your project.
 
@@ -79,11 +83,15 @@ wc_cli()
 wc_cli('--frame-interval=0.005', '--min-frame-delay=0')
 ```
 
+</details>
+
 ### 2. Customization
 
 It's possible to design your own brush shape and animation.
 
 #### Example brush
+
+<details><summary>Click to expand</summary>
 
 To create a new brush type, implement the `Brush` interface, e.g.
 
@@ -107,7 +115,11 @@ This will define a brush like this:
 ##
 ```
 
+</details>
+
 #### Example path
+
+<details><summary>Click to expand</summary>
 
 Similarly, you can implement the `Path` interface to create a new brush path.
 
@@ -124,6 +136,7 @@ class MySimplePath(Path):
         ]
 ```
 
+</details>
 
 ## Roadmap
 
