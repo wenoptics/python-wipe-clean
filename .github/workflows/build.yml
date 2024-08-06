@@ -58,6 +58,8 @@ jobs:
           poetry run flake8
           poetry run pytest
 
+      - uses: autofix-ci/action@d3e591514b99d0fca6779455ff8338516663f7cc
+
       # - run: pip install -r scripts/requirements.ci.txt
       - name: Build README.md
         run: poetry run python scripts/make_doc.py
